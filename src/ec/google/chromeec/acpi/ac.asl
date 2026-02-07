@@ -14,10 +14,6 @@ Device (AC)
 
 	Method (_STA)
 	{
-#if CONFIG(EC_FOR_CHROMEBOX)
-		Return (0)
-#else
 		Return (0x0F)
-#endif
 	}
 }

@@ -23,11 +23,7 @@ Device (VBTN)
 	}
 	Method(_STA, 0)
 	{
-#if CONFIG(EC_FOR_CHROMEBOX)
-		Return (0)
-#else
 		Return (0xF)
-#endif
 	}
 }
 
@@ -37,10 +33,6 @@ Device (VBTO)
 	Name (_CID, "PNP0C60")
 	Method (_STA, 0)
 	{
-#if CONFIG(EC_FOR_CHROMEBOX)
-		Return (0)
-#else
 		Return (0xF)
-#endif
 	}
 }
