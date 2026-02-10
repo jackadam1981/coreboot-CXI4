@@ -254,6 +254,29 @@ config EC_GOOGLE_CHROMEEC_NEEDS_BATTERY_WORKAROUND
 	  logic.
 	  If unsure, say N.
 
+config MINIPC_HIDE_AC
+	depends on SYSTEM_TYPE_MINIPC
+	bool "Hide AC adapter (ACPI0003) on mini PC / Chromebox"
+	default n
+
+config MINIPC_HIDE_BATTERY
+	depends on SYSTEM_TYPE_MINIPC
+	bool "Hide battery (PNP0C0A) on mini PC / Chromebox"
+	default n
+
+config MINIPC_HIDE_VBTN
+	depends on SYSTEM_TYPE_MINIPC
+	bool "Hide Chromebook keyboard/vbtn (GOOG000A, INT33D6) on mini PC / Chromebox"
+	default n
+
+config EC_GOOGLE_CHROMEEC_ACPI_S0IX_HOST_SLEEP
+	bool "ACPI EC host sleep hooks for S0ix (CHSE / device.prepare path)"
+	default n
+	help
+	  Enable ACPI methods used by Linux cros_ec during S0ix suspend prepare.
+	  Required for deep S0ix sleep on Kaisa without OS hooks.
+
+
 config EC_GOOGLE_CHROMEEC_LPC_GENERIC_MEMORY_RANGE
 	def_bool n
 	help

@@ -1,3 +1,7 @@
+# Chromebox (Kaisa / Acer CXI4): minipc, no battery, no tablet/lid.
+# 使用: make defconfig CONFIG_DEFCONFIG=configs/cml/config.kaisa.uefi 后再 make
+CONFIG_SYSTEM_TYPE_MINIPC=y
+
 CONFIG_VENDOR_GOOGLE=y
 CONFIG_IFD_BIN_PATH="3rdparty/blobs/mainboard/google/puff/puff/flashdescriptor.bin"
 CONFIG_ME_BIN_PATH="3rdparty/blobs/mainboard/google/puff/puff/me.bin"
@@ -8,3 +12,36 @@ CONFIG_EC_GOOGLE_CHROMEEC_FIRMWARE_FILE="3rdparty/blobs/mainboard/google/puff/pu
 CONFIG_HAVE_ME_BIN=y
 CONFIG_DO_NOT_TOUCH_DESCRIPTOR_REGION=y
 CONFIG_NO_GFX_INIT=y
+
+# Chromebox: no built-in battery, disable long battery string read
+# CONFIG_EC_GOOGLE_CHROMEEC_READ_BATTERY_LONG_STRING is not set
+
+# EC: enable automatic fan control at boot (fan in auto mode)
+CONFIG_EC_GOOGLE_CHROMEEC_AUTO_FAN_CTRL=y
+
+# EC: at boot, sync firmware "power on after AC restore" option to EC
+CONFIG_EC_GOOGLE_CHROMEEC_AFTER_G3_STATE=y
+
+# EC RTC: expose to ACPI so Windows can use it for time/alarm
+CONFIG_EC_GOOGLE_CHROMEEC_RTC=y
+
+# Hide extra ACPI devices on mini PC.
+CONFIG_MINIPC_HIDE_AC=y
+CONFIG_MINIPC_HIDE_BATTERY=y
+CONFIG_MINIPC_HIDE_VBTN=y
+
+# Only one TF/SD slot: hide eMMC.
+CONFIG_SOC_INTEL_HIDE_EMMC=y
+
+# EDK2 built-in PXE (SNP/NetworkPkg); MrChromebox-2606 默认不含 iPXE payload
+CONFIG_EDK2_NETWORK_PXE_SUPPORT=y
+CONFIG_EDK2_RTKUNDI_DRIVER=y
+# EDK2 串口会拖慢启动，关闭
+# CONFIG_EDK2_SERIAL_SUPPORT is not set
+# Chromebox 无 PS/2，关闭
+# CONFIG_EDK2_PS2_SUPPORT is not set
+
+# EDK2: use local fork (linked from parent repo src/edk2 at build time)
+CONFIG_EDK2_REPOSITORY="https://github.com/jackadam1981/mrchromebox_edk2.git"
+# RTL8168 PXE fix branch (Acer CXI4)
+CONFIG_EDK2_TAG_OR_REV="origin/fix/pxe-rtl8168-acer-cxi4"
