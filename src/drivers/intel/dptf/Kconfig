@@ -42,3 +42,14 @@ config DRIVERS_INTEL_DPTF_SUPPORTS_TBAT
 	help
 	  When enabled, chip driver/intel/dptf will publish information to the
 	  SSDT for TBAT device.
+
+config DRIVERS_INTEL_DPTF_DISABLE_ACTIVE_FAN
+	bool "Disable DPTF Active Policy (fan control)"
+	default n
+	depends on DRIVERS_INTEL_DPTF
+	help
+	  When enabled, DPTF Active Policy (fan control) is disabled in ACPI.
+	  Use this for boards that run EC auto fan mode (e.g. Windows/Generic
+	  Linux) where DPTF would otherwise override EC with manual PWM commands.
+	  Passive (CPU throttle), Critical (shutdown), Power Limits and Charger
+	  controls remain enabled.

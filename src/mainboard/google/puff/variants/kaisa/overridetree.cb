@@ -264,7 +264,7 @@ chip soc/intel/cannonlake
 	device domain 0 on
 		device ref dptf		on
 			chip drivers/intel/dptf
-				## Active Policy
+				## Active Policy (disabled via CONFIG_DRIVERS_INTEL_DPTF_DISABLE_ACTIVE_FAN for Kaisa)
 				register "policies.active[0]" = "{.target=DPTF_CPU,
 					.thresholds={TEMP_PCT(94, 0),}}"
 				register "policies.active[1]" = "{.target=DPTF_TEMP_SENSOR_0,

@@ -6,6 +6,7 @@
 #include <device/device.h>
 #include <intelblocks/pmc_ipc.h>
 #include <stdio.h>
+#include <string.h>
 #include <soc/dptf.h>
 #include <soc/pci_devs.h>
 #include "chip.h"
@@ -497,10 +498,10 @@ static const struct dptf_platform_info generic_dptf_platform_info = {
 };
 
 /* Add minimal definitions of DPTF devices into the SSDT */
-static void write_device_definitions(const struct device *dev)
+static void write_device_definitions(const struct device *dev,
+			const struct drivers_intel_dptf_config *config)
 {
 	const struct dptf_platform_info *platform_info = &generic_dptf_platform_info;
-	const struct drivers_intel_dptf_config *config;
 	struct device *parent;
 	enum dptf_participant p;
 
@@ -511,8 +512,6 @@ static void write_device_definitions(const struct device *dev)
 		       __func__);
 		return;
 	}
-
-	config = config_of(dev);
 	write_tcpu(parent, config);
 	write_open_dptf_device(dev, platform_info);
 
@@ -616,9 +615,16 @@ static void write_options(const struct drivers_intel_dptf_config *config)
 /* Add custom tables and methods to SSDT */
 static void dptf_fill_ssdt(const struct device *dev)
 {
-	struct drivers_intel_dptf_config *config = config_of(dev);
+	const struct drivers_intel_dptf_config *config = config_of(dev);
+	struct drivers_intel_dptf_config config_override;
 
-	write_device_definitions(dev);
+	if (CONFIG(DRIVERS_INTEL_DPTF_DISABLE_ACTIVE_FAN)) {
+		memcpy(&config_override, config, sizeof(config_override));
+		config_override.policies.active[0].target = DPTF_NONE;
+		config = &config_override;
+	}
+
+	write_device_definitions(dev, config);
 	write_policies(config);
 	write_controls(config);
 	write_options(config);
