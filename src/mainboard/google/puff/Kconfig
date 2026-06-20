@@ -192,4 +192,33 @@ config EDK2_BOOT_TIMEOUT
 config INTEL_OC_MAILBOX_ENABLE_UNDERVOLTING
 	default y
 
+config PUFF_PRESERVE_S0IX
+	bool "Preserve S0ix on Chromebox (disable desktop runtime S0ix disable)"
+	default n
+	help
+	  When enabled, prevents desktop/chromebox power policy from turning off
+	  S0ix at runtime. Required for Modern Standby / s2idle on Kaisa.
+
+config PUFF_ACPI_S0IX_HOOK
+	bool "Generate MS0X ACPI hook and reorder PEP S0ix entry"
+	default n
+	depends on PUFF_PRESERVE_S0IX
+	help
+	  Generate \_SB.MS0X and call it before EC0.S0IX during PEP LPI entry.
+
+config PUFF_S0IX_PWRB_WAKE
+	bool "Expose ACPI PWRB for EC power-button wake during S0ix"
+	default n
+	depends on PUFF_PRESERVE_S0IX
+
+config PUFF_S0IX_NO_XHCI_ACPI_WAKE
+	bool "Omit XHCI ACPI _PRW (hub-friendly S0ix on Linux)"
+	default n
+	depends on PUFF_PRESERVE_S0IX
+
+config PUFF_S0IX_USB_PORT_WAKE
+	bool "Enable XHCI _DSW port wake when _PRW is omitted"
+	default n
+	depends on PUFF_S0IX_NO_XHCI_ACPI_WAKE
+
 endif # BOARD_GOOGLE_BASEBOARD_PUFF
