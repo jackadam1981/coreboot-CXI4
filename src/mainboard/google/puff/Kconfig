@@ -121,7 +121,7 @@ config FMDFILE
 	default "src/mainboard/\$(CONFIG_MAINBOARD_DIR)/chromeos-32MiB.fmd" if BOARD_ROMSIZE_KB_32768 && CHROMEOS
 	default "src/mainboard/\$(CONFIG_MAINBOARD_DIR)/uefi-16MiB.fmd" if BOARD_ROMSIZE_KB_16384 && !CHROMEOS
 
-# 断电恢复后默认保持关机（不自动上电开机）；SoC 默认为“上电即开”，此处改为 n
+# Default off after AC loss (SoC default is power-on after failure)
 config POWER_STATE_DEFAULT_ON_AFTER_FAILURE
 	bool
 	default n
@@ -192,33 +192,64 @@ config EDK2_BOOT_TIMEOUT
 config INTEL_OC_MAILBOX_ENABLE_UNDERVOLTING
 	default y
 
-config PUFF_PRESERVE_S0IX
-	bool "Preserve S0ix on Chromebox (disable desktop runtime S0ix disable)"
-	default n
+choice PUFF_SLEEP_PROFILE
+	prompt "Chromebox sleep profile (pick one ROM target)"
+	default PUFF_SLEEP_PROFILE_NONE
+
+config PUFF_SLEEP_PROFILE_NONE
+	bool "Default (no Puff sleep tuning)"
 	help
-	  When enabled, prevents desktop/chromebox power policy from turning off
-	  S0ix at runtime. Required for Modern Standby / s2idle on Kaisa.
+	  Stock behavior. Desktop/minipc policy may disable S0ix at runtime.
+
+config PUFF_SLEEP_PROFILE_LINUX_S0IX
+	bool "Linux s2idle (S0ix, hub-friendly XHCI wake)"
+	select PUFF_PRESERVE_S0IX
+	select EC_GOOGLE_CHROMEEC_ACPI_S0IX_HOST_SLEEP
+	select PUFF_ACPI_S0IX_HOOK
+	select PUFF_S0IX_PWRB_WAKE
+	select PUFF_S0IX_NO_XHCI_ACPI_WAKE
+	select PUFF_S0IX_USB_PORT_WAKE
+	help
+	  Preserve S0ix for Linux s2idle on Chromebox. Omits XHCI _PRW and
+	  uses _DSW port wake so USB hubs work during suspend.
+
+config PUFF_SLEEP_PROFILE_WINDOWS_S3
+	bool "Windows classic S3 (disable Modern Standby / S0ix)"
+	select PUFF_DEFAULT_S3_SLEEP
+	help
+	  Force s0ix_enable=false via CFR and FSP so Windows uses ACPI S3
+	  instead of Connected Standby. Use when S0ix causes sleep-death on
+	  Kaisa Chromebox.
+
+endchoice
+
+config PUFF_DEFAULT_S3_SLEEP
+	bool
+	help
+	  Internal: selected by PUFF_SLEEP_PROFILE_WINDOWS_S3.
+
+config PUFF_PRESERVE_S0IX
+	bool
+	depends on !PUFF_DEFAULT_S3_SLEEP
+	help
+	  Internal: selected by PUFF_SLEEP_PROFILE_LINUX_S0IX.
 
 config PUFF_ACPI_S0IX_HOOK
-	bool "Generate MS0X ACPI hook and reorder PEP S0ix entry"
-	default n
+	bool
 	depends on PUFF_PRESERVE_S0IX
 	help
 	  Generate \_SB.MS0X and call it before EC0.S0IX during PEP LPI entry.
 
 config PUFF_S0IX_PWRB_WAKE
-	bool "Expose ACPI PWRB for EC power-button wake during S0ix"
-	default n
+	bool
 	depends on PUFF_PRESERVE_S0IX
 
 config PUFF_S0IX_NO_XHCI_ACPI_WAKE
-	bool "Omit XHCI ACPI _PRW (hub-friendly S0ix on Linux)"
-	default n
+	bool
 	depends on PUFF_PRESERVE_S0IX
 
 config PUFF_S0IX_USB_PORT_WAKE
-	bool "Enable XHCI _DSW port wake when _PRW is omitted"
-	default n
+	bool
 	depends on PUFF_S0IX_NO_XHCI_ACPI_WAKE
 
 endif # BOARD_GOOGLE_BASEBOARD_PUFF
