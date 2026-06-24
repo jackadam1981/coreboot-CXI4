@@ -246,4 +246,12 @@ config PUFF_S0IX_USB_PORT_WAKE
 	bool
 	depends on PUFF_S0IX_NO_XHCI_ACPI_WAKE
 
+config PUFF_NO_XHCI_ACPI_WAKE
+	bool "Experimental: omit XHCI ACPI wake on S3 (lab test)"
+	default n
+	help
+	  Drops XHCI _PRW and sets _S3W/_S4W=0 for Windows S3 sleep tests.
+	  Use when xHCI PME causes instant resume (e.g. USB devices on hub).
+	  Power button wake still works. Not for production ROMs.
+
 endif # BOARD_GOOGLE_BASEBOARD_PUFF
