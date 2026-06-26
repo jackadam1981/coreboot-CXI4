@@ -119,6 +119,12 @@ config UART_FOR_CONSOLE
 config FMDFILE
 	default "src/mainboard/\$(CONFIG_MAINBOARD_DIR)/chromeos-16MiB.fmd" if BOARD_ROMSIZE_KB_16384 && CHROMEOS
 	default "src/mainboard/\$(CONFIG_MAINBOARD_DIR)/chromeos-32MiB.fmd" if BOARD_ROMSIZE_KB_32768 && CHROMEOS
+	default "src/mainboard/\$(CONFIG_MAINBOARD_DIR)/uefi-16MiB.fmd" if BOARD_ROMSIZE_KB_16384 && !CHROMEOS
+
+# Default off after AC loss (SoC default is power-on after failure)
+config POWER_STATE_DEFAULT_ON_AFTER_FAILURE
+	bool
+	default n
 
 config CBFS_SIZE
 	default 0xd00000 if BOARD_ROMSIZE_KB_16384
@@ -253,5 +259,14 @@ config PUFF_NO_XHCI_ACPI_WAKE
 	  Drops XHCI _PRW and sets _S3W/_S4W=0 for Windows S3 sleep tests.
 	  Use when xHCI PME causes instant resume (e.g. USB devices on hub).
 	  Power button wake still works. Not for production ROMs.
+
+config PUFF_S3_USB_PORT_WAKE
+	bool "Windows S3: USB port wake without XHCI controller PME"
+	depends on PUFF_DEFAULT_S3_SLEEP
+	default n
+	help
+	  Omits XHCI _PRW (no controller-level GPE/PME false wake) but keeps
+	  _S3W/_S4W=3 and _DSW port wake (PMEE + PORTSC WDE). Intended when
+	  s3-no-xhci fixes instant resume but blocks keyboard/mouse wake.
 
 endif # BOARD_GOOGLE_BASEBOARD_PUFF

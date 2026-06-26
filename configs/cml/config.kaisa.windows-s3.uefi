@@ -1,5 +1,5 @@
-# Kaisa / Acer CXI4: Windows S3 + no XHCI ACPI wake (xHCI PME instant-resume test)
-# Use: ./scripts/build-coreboot.sh kaisa --s3-no-xhci --pxe
+# Kaisa / Acer CXI4: Windows classic S3 (XHCI _PRW enabled, baseline)
+# Use: ./scripts/build-coreboot.sh kaisa --windows-s3 --pxe
 CONFIG_SYSTEM_TYPE_MINIPC=y
 CONFIG_VENDOR_GOOGLE=y
 CONFIG_IFD_BIN_PATH="3rdparty/blobs/mainboard/google/puff/puff/flashdescriptor.bin"
@@ -24,7 +24,6 @@ CONFIG_EDK2_RTKUNDI_DRIVER=y
 CONFIG_EDK2_REPOSITORY="https://github.com/jackadam1981/mrchromebox_edk2.git"
 CONFIG_EDK2_TAG_OR_REV="origin/pr/rtl8168-pxe"
 CONFIG_PUFF_SLEEP_PROFILE_WINDOWS_S3=y
-CONFIG_PUFF_NO_XHCI_ACPI_WAKE=y
 CONFIG_BOARD_ROMSIZE_KB_16384=y
 CONFIG_COREBOOT_ROMSIZE_KB_16384=y
 # CONFIG_CHROMEOS is not set
