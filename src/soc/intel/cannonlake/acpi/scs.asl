@@ -21,7 +21,7 @@ Scope (\_SB.PCI0) {
 		Name (TEMP, 0)
 		Name (DSUU, ToUUID("f6c13ea5-65cd-461f-ab7a-29f7e8d5bd61"))
 
-#if CONFIG(SOC_INTEL_HIDE_EMMC)
+#if CONFIG(PUFF_HIDE_EMMC)
 		Method (_STA, 0, NotSerialized)
 		{
 			Return (0)

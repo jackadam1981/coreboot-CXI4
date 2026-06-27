@@ -23,7 +23,7 @@ Device (VBTN)
 	}
 	Method(_STA, 0)
 	{
-#if CONFIG(MINIPC_HIDE_VBTN)
+#if CONFIG(PUFF_HIDE_VBTN)
 		Return (0)
 #else
 		Return (0xF)
@@ -37,7 +37,7 @@ Device (VBTO)
 	Name (_CID, "PNP0C60")
 	Method (_STA, 0)
 	{
-#if CONFIG(MINIPC_HIDE_VBTN)
+#if CONFIG(PUFF_HIDE_VBTN)
 		Return (0)
 #else
 		Return (0xF)

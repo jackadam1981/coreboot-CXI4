@@ -95,7 +95,7 @@ Scope (\_SB.PCI0)
 		Name (_CID, Package() { EISAID("PNP0303"), EISAID("PNP030B") } )
 
 		Method (_STA, 0, NotSerialized) {
-#if CONFIG(MINIPC_HIDE_VBTN)
+#if CONFIG(PUFF_HIDE_VBTN)
 			Return (0)
 #else
 			Return (0x0F)

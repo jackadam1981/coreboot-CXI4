@@ -159,6 +159,39 @@ config MAINBOARD_PART_NUMBER
 config OVERRIDE_DEVICETREE
 	default "variants/\$(CONFIG_VARIANT_DIR)/overridetree.cb"
 
+# Chromebox (SYSTEM_TYPE_MINIPC): hide laptop-only ACPI/PCI on Puff family.
+config PUFF_HIDE_VBTN
+	bool "Hide tablet virtual buttons (VBTN / superio keyboard ACPI)"
+	default y
+	depends on SYSTEM_TYPE_MINIPC
+	help
+	  Chromebox has no tablet mode. Hide INT33D6 / INT33D3 and the
+	  superio keyboard ACPI node via _STA=0.
+
+config PUFF_HIDE_R8168_ACPI
+	bool "Hide RTL8168 ACPI companion device (ACPI\\R8168)"
+	default y
+	depends on SYSTEM_TYPE_MINIPC
+	help
+	  Do not generate the RTL8168 SSDT ACPI device (_HID R8168).
+	  Windows shows Code 28 for ACPI\\R8168; the PCI driver still works.
+
+config PUFF_HIDE_EMMC
+	bool "Hide eMMC controller (single TF/SD slot only)"
+	default y
+	depends on SYSTEM_TYPE_MINIPC
+	help
+	  PCH exposes both eMMC and SDXC; most Puff Chromeboxes only have
+	  a TF/SD slot. Hide eMMC in ACPI (_STA=0) and disable in FSP.
+
+config PUFF_HIDE_SATA
+	bool "Disable PCH SATA AHCI (8086:02d3)"
+	default y
+	depends on SYSTEM_TYPE_MINIPC
+	help
+	  Puff Chromeboxes have no SATA disk. Disable in FSP; variants
+	  should set devicetree sata off where applicable.
+
 config TPM_TIS_ACPI_INTERRUPT
 	int
 	default 53 # GPE0_DW1_21 (GPP_C21)

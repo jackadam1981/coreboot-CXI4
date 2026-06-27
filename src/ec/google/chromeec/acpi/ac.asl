@@ -2,7 +2,7 @@
 
 // Scope (EC0)
 
-#if !CONFIG(MINIPC_HIDE_AC)
+#if !CONFIG(SYSTEM_HIDE_AC_ADAPTER)
 Device (AC)
 {
 	Name (_HID, "ACPI0003")
