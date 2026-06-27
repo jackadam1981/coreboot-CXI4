@@ -2,6 +2,7 @@
 
 // Scope (EC0)
 
+#if !CONFIG(MINIPC_HIDE_AC)
 Device (AC)
 {
 	Name (_HID, "ACPI0003")
@@ -14,10 +15,7 @@ Device (AC)
 
 	Method (_STA)
 	{
-#if CONFIG(MINIPC_HIDE_AC)
-		Return (0)
-#else
 		Return (0x0F)
-#endif
 	}
 }
+#endif

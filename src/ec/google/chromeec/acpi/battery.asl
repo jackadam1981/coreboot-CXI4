@@ -322,11 +322,15 @@ Method (BBST, 4, Serialized)
 	If (Local1 != DeRefOf (Arg2)) {
 		Arg2 = Local1
 		If (Arg0 == 0) {
+#if !CONFIG(MINIPC_HIDE_BATTERY)
 			Notify (BAT0, 0x80)
+#endif
 		}
 #ifdef EC_ENABLE_SECOND_BATTERY_DEVICE
 		Else {
+#if !CONFIG(MINIPC_HIDE_BATTERY)
 			Notify (BAT1, 0x80)
+#endif
 		}
 #endif
 	}
@@ -365,6 +369,7 @@ Method (BBST, 4, Serialized)
 	Return (Arg1)
 }
 
+#if !CONFIG(MINIPC_HIDE_BATTERY)
 Device (BAT0)
 {
 	Name (_HID, EISAID ("PNP0C0A"))
@@ -436,11 +441,7 @@ Device (BAT0)
 
 	Method (_STA, 0, Serialized)
 	{
-#if CONFIG(MINIPC_HIDE_BATTERY)
-		Return (0)
-#else
 		Return (BSTA (0))
-#endif
 	}
 
 	Method (_BIF, 0, Serialized)
@@ -458,8 +459,10 @@ Device (BAT0)
 		Return (BBST (0, PBST, RefOf (BSTP), BFWK))
 	}
 }
+#endif /* !CONFIG(MINIPC_HIDE_BATTERY) */
 
 #ifdef EC_ENABLE_SECOND_BATTERY_DEVICE
+#if !CONFIG(MINIPC_HIDE_BATTERY)
 Device (BAT1)
 {
 	Name (_HID, EISAID ("PNP0C0A"))
@@ -531,11 +534,7 @@ Device (BAT1)
 
 	Method (_STA, 0, Serialized)
 	{
-#if CONFIG(MINIPC_HIDE_BATTERY)
-		Return (0)
-#else
 		Return (BSTA (1))
-#endif
 	}
 
 	Method (_BIF, 0, Serialized)
@@ -553,4 +552,5 @@ Device (BAT1)
 		Return (BBST (1, PBST, RefOf (BSTP), BFWK))
 	}
 }
+#endif /* !CONFIG(MINIPC_HIDE_BATTERY) */
 #endif
