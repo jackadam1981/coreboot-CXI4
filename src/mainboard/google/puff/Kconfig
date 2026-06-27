@@ -207,11 +207,9 @@ config PUFF_SLEEP_PROFILE_LINUX_S0IX
 	select EC_GOOGLE_CHROMEEC_ACPI_S0IX_HOST_SLEEP
 	select PUFF_ACPI_S0IX_HOOK
 	select PUFF_S0IX_PWRB_WAKE
-	select PUFF_S0IX_NO_XHCI_ACPI_WAKE
-	select PUFF_S0IX_USB_PORT_WAKE
 	help
-	  Preserve S0ix for Linux s2idle on Chromebox. Omits XHCI _PRW and
-	  uses _DSW port wake so USB hubs work during suspend.
+	  Preserve S0ix for Linux s2idle on Chromebox. Keeps XHCI _PRW
+	  (ChromeOS-aligned) for USB wake during s2idle.
 
 config PUFF_SLEEP_PROFILE_WINDOWS_S3
 	bool "Windows classic S3 (disable Modern Standby / S0ix)"
