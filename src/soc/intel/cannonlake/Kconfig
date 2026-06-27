@@ -318,6 +318,15 @@ config SOC_INTEL_HIDE_EMMC
 	  only the real SD/TF slot (SDXC) appears. eMMC will not be usable as
 	  storage in the OS when enabled.
 
+config SOC_INTEL_HIDE_SATA
+	depends on SYSTEM_TYPE_MINIPC
+	bool "Disable SATA AHCI controller (8086:02d3) on mini PC / Chromebox"
+	default n
+	help
+	  Kaisa-class Chromeboxes have no SATA disk. Disable the PCH SATA
+	  controller in FSP and devicetree so lspci/Windows do not expose
+	  8086:02d3.
+
 config FSP_HEADER_PATH
 	default "3rdparty/fsp/CoffeeLakeFspBinPkg/Include/" if SOC_INTEL_COFFEELAKE || SOC_INTEL_WHISKEYLAKE
 	default "3rdparty/fsp/CometLakeFspBinPkg/CometLake1/Include/" if SOC_INTEL_COMETLAKE_1
