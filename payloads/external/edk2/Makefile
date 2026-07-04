@@ -225,11 +225,14 @@ ifeq ($(CONFIG_EDK2_LOAD_OPTION_ROMS),y)
 BUILD_STR += -D LOAD_OPTION_ROMS=TRUE
 endif
 # EDK2_NETWORK_PXE_SUPPORT	= FALSE
-ifeq ($(CONFIG_EDK2_NETWORK_PXE_SUPPORT), y)
+ifeq ($(CONFIG_EDK2_NETWORK_PXE_SUPPORT),y)
 BUILD_STR += -D NETWORK_PXE_BOOT=TRUE
+ifeq ($(CONFIG_EDK2_RTKUNDI_DRIVER),y)
+BUILD_STR += -D RTKUNDI_ENABLE=TRUE
+endif
 endif
 # NETWORK_IPXE                  = FALSE
-ifeq ($(CONFIG_EDK2_IPXE),y)
+ifeq ($(CONFIG_EDK2_ENABLE_IPXE),y)
 BUILD_STR += -D NETWORK_IPXE=TRUE
 BUILD_STR += --pcd gUefiPayloadPkgTokenSpaceGuid.PcdiPXEOptionName=L"$(CONFIG_EDK2_IPXE_OPTION_NAME)"
 endif
@@ -327,13 +330,16 @@ gop_driver: $(EDK2_PATH)
 		cp $(top)/$(CONFIG_INTEL_GMA_VBT_FILE) $(EDK2_PATH)/UefiPayloadPkg/vbt.bin; \
 	fi; \
 
+IPXE_ROM_BIN=$(top)/payloads/external/iPXE/ipxe/ipxe.rom
+
+ifeq ($(CONFIG_EDK2_ENABLE_IPXE),y)
+ipxe_rom: $(EDK2_PATH) $(IPXE_ROM_BIN)
+	@echo "    Including externally built iPXE"
+	@mkdir -p $(EDK2_PATH)/UefiPayloadPkg/NetworkDrivers/
+	@cp $(IPXE_ROM_BIN) $(EDK2_PATH)/UefiPayloadPkg/NetworkDrivers/ipxe.efi
+else
 ipxe_rom: $(EDK2_PATH)
-	if [ "$(CONFIG_EDK2_IPXE)" == "y" ]; then \
-		echo "    Including externally built iPXE"; \
-		mkdir -p $(EDK2_PATH)/UefiPayloadPkg/NetworkDrivers/; \
-		cp $(top)/payloads/external/iPXE/ipxe/ipxe.rom \
-			$(EDK2_PATH)/UefiPayloadPkg/NetworkDrivers/ipxe.efi; \
-	fi \
+endif
 
 checktools:
 	echo -n "EDK2: Checking uuid-dev:"

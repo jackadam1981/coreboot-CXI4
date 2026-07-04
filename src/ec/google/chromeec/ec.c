@@ -783,7 +783,8 @@ int google_chromeec_set_sku_id(uint32_t skuid)
 	return 0;
 }
 
-#if CONFIG(EC_GOOGLE_CHROMEEC_RTC)
+#if CONFIG(EC_GOOGLE_CHROMEEC_RTC) && ENV_RAMSTAGE
+/* EC RTC for ACPI/OS in ramstage; bootblock/romstage/postcar use mc146818. */
 int rtc_get(struct rtc_time *time)
 {
 	struct ec_response_rtc resp = {};

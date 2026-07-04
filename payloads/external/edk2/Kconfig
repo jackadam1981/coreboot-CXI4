@@ -286,6 +286,14 @@ config EDK2_NETWORK_PXE_SUPPORT
 	depends on EDK2_REPO_MRCHROMEBOX
 	default n
 
+config EDK2_RTKUNDI_DRIVER
+	bool "Include Realtek RtkUndiDxe for RTL8168/8111 PXE"
+	depends on EDK2_NETWORK_PXE_SUPPORT
+	default n
+	help
+	  Enable Realtek UNDI (RtkUndiDxe) for RTL8168/8111 when using built-in
+	  UEFI PXE. Kaisa defconfigs set CONFIG_EDK2_RTKUNDI_DRIVER=y explicitly.
+
 config EDK2_GOP_DRIVER
 	bool "Add a GOP driver to the Tianocore build"
 	depends on INTEL_GMA_ADD_VBT && NO_GFX_INIT && !EDK2_REPO_OFFICIAL
