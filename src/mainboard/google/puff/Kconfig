@@ -187,6 +187,50 @@ config EDK2_BOOT_TIMEOUT
 config INTEL_OC_MAILBOX_ENABLE_UNDERVOLTING
 	default y
 
+
+choice PUFF_SLEEP_MODE
+	prompt "Sleep mode (one per ROM image)"
+	default PUFF_SLEEP_MODE_NONE
+
+config PUFF_SLEEP_MODE_NONE
+	bool "None (stock)"
+
+config PUFF_SLEEP_MODE_S0IX
+	bool "S0ix - Linux s2idle"
+	select PUFF_PRESERVE_S0IX
+	select EC_GOOGLE_CHROMEEC_ACPI_S0IX_HOST_SLEEP
+	select PUFF_ACPI_S0IX_HOOK
+	select PUFF_S0IX_PWRB_WAKE
+
+config PUFF_SLEEP_MODE_S3
+	bool "S3 - Windows classic sleep"
+	select PUFF_DEFAULT_S3_SLEEP
+
+endchoice
+
+config PUFF_DEFAULT_S3_SLEEP
+	bool
+
+config PUFF_PRESERVE_S0IX
+	bool
+	depends on !PUFF_DEFAULT_S3_SLEEP
+
+config PUFF_ACPI_S0IX_HOOK
+	bool
+	depends on PUFF_PRESERVE_S0IX
+
+config PUFF_S0IX_PWRB_WAKE
+	bool
+	depends on PUFF_PRESERVE_S0IX
+
+config PUFF_S0IX_NO_XHCI_ACPI_WAKE
+	bool
+	depends on PUFF_PRESERVE_S0IX
+
+config PUFF_S0IX_USB_PORT_WAKE
+	bool
+	depends on PUFF_S0IX_NO_XHCI_ACPI_WAKE
+
 endif # BOARD_GOOGLE_BASEBOARD_PUFF
 
 if BOARD_GOOGLE_KAISA || BOARD_GOOGLE_KAISA_LEGACY
