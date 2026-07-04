@@ -190,7 +190,7 @@ config INTEL_OC_MAILBOX_ENABLE_UNDERVOLTING
 
 choice PUFF_SLEEP_MODE
 	prompt "Sleep mode (one per ROM image)"
-	default PUFF_SLEEP_MODE_NONE
+	default PUFF_SLEEP_MODE_S3
 
 config PUFF_SLEEP_MODE_NONE
 	bool "None (stock)"
