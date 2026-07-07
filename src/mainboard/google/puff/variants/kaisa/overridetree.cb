@@ -261,69 +261,7 @@ chip soc/intel/cannonlake
 	register "sata_port[1].TxGen3DeEmph" = "0x20"
 
 	device domain 0 on
-		device ref dptf		on
-			chip drivers/intel/dptf
-				## Active Policy
-				register "policies.active[0]" = "{.target=DPTF_CPU,
-					.thresholds={TEMP_PCT(94, 0),}}"
-				register "policies.active[1]" = "{.target=DPTF_TEMP_SENSOR_0,
-					.thresholds={TEMP_PCT(65, 90),
-						     TEMP_PCT(61, 80),
-						     TEMP_PCT(57, 70),
-						     TEMP_PCT(53, 60),
-						     TEMP_PCT(49, 50),
-						     TEMP_PCT(45, 40),
-						     TEMP_PCT(41, 0),}}"
-
-				## Passive Policy
-				register "policies.passive[0]" = "DPTF_PASSIVE(CPU, CPU,           95, 5000)"
-				register "policies.passive[1]" = "DPTF_PASSIVE(CPU, TEMP_SENSOR_0, 68, 5000)"
-
-				## Critical Policy
-				register "policies.critical[0]" = "DPTF_CRITICAL(CPU,          100, SHUTDOWN)"
-				register "policies.critical[1]" = "DPTF_CRITICAL(TEMP_SENSOR_0, 78, SHUTDOWN)"
-
-				## Power Limits Control
-				# PL1 fixed at 25W (was 15W), avg over 28-32s interval
-				# 25-51W PL2 in 1000mW increments, avg over 28-32s interval
-				register "controls.power_limits.pl1" = "{
-					.min_power = 25000,
-					.max_power = 25000,
-					.time_window_min = 28 * MSECS_PER_SEC,
-					.time_window_max = 32 * MSECS_PER_SEC,
-					.granularity = 200,}"
-				register "controls.power_limits.pl2" = "{
-					.min_power = 25000,
-					.max_power = 51000,
-					.time_window_min = 28 * MSECS_PER_SEC,
-					.time_window_max = 32 * MSECS_PER_SEC,
-					.granularity = 1000,}"
-
-				## Charger Performance Control (Control, mA)
-				register "controls.charger_perf[0]" = "{ 255, 1700 }"
-				register "controls.charger_perf[1]" = "{  24, 1500 }"
-				register "controls.charger_perf[2]" = "{  16, 1000 }"
-				register "controls.charger_perf[3]" = "{   8,  500 }"
-
-				## Fan Performance Control (Percent, Speed, Noise, Power)
-				register "controls.fan_perf[0]" = "{  90, 6700, 220, 2200, }"
-				register "controls.fan_perf[1]" = "{  80, 5800, 180, 1800, }"
-				register "controls.fan_perf[2]" = "{  70, 5000, 145, 1450, }"
-				register "controls.fan_perf[3]" = "{  60, 4900, 115, 1150, }"
-				register "controls.fan_perf[4]" = "{  50, 3838,  90,  900, }"
-				register "controls.fan_perf[5]" = "{  40, 2904,  55,  550, }"
-				register "controls.fan_perf[6]" = "{  30, 2337,  30,  300, }"
-				register "controls.fan_perf[7]" = "{  20, 1608,  15,  150, }"
-				register "controls.fan_perf[8]" = "{  10,  800,  10,  100, }"
-				register "controls.fan_perf[9]" = "{   0,    0,   0,   50, }"
-
-				# Fan options
-				register "options.fan.fine_grained_control" = "true"
-				register "options.fan.step_size" = "2"
-
-				device generic 0 on end
-			end
-		end
+		device ref dptf		off end
 		device ref xhci		on
 			chip drivers/usb/acpi
 				device ref xhci_root_hub on
@@ -405,24 +343,8 @@ chip soc/intel/cannonlake
 				end
 			end
 		end
-		device ref i2c2		on
-			# PCON PS175
-			chip drivers/i2c/generic
-				register "hid" = ""1AF80175""
-				register "name" = ""PS17""
-				register "desc" = ""Parade PS175""
-				device i2c 4a hidden end
-			end
-		end
-		device ref i2c3		on
-			# Realtek RTD2142
-			chip drivers/i2c/generic
-				register "hid" = ""10EC2142""
-				register "name" = ""RTD2""
-				register "desc" = ""Realtek RTD2142""
-				device i2c 4a hidden end
-			end
-		end
+		device ref i2c2		on end
+		device ref i2c3		on end
 		device ref i2c4		on
 			chip drivers/i2c/generic
 				register "hid" = ""10EC5682""

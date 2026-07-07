@@ -1,3 +1,8 @@
+# GENERATED — do not edit; edit minipc-base or fragments/, then:
+#   ./scripts/sync-kaisa-minipc-defconfigs.sh
+# Windows S3 + USB port wake (no XHCI controller PME)
+# Build: ./scripts/build-coreboot.sh kaisa --profile-windows-s3 --pxe --ipxe
+CONFIG_SYSTEM_TYPE_MINIPC=y
 CONFIG_VENDOR_GOOGLE=y
 CONFIG_IFD_BIN_PATH="3rdparty/blobs/mainboard/google/puff/puff/flashdescriptor.bin"
 CONFIG_ME_BIN_PATH="3rdparty/blobs/mainboard/google/puff/puff/me.bin"
@@ -8,7 +13,24 @@ CONFIG_EC_GOOGLE_CHROMEEC_FIRMWARE_FILE="3rdparty/blobs/mainboard/google/puff/pu
 CONFIG_HAVE_ME_BIN=y
 CONFIG_DO_NOT_TOUCH_DESCRIPTOR_REGION=y
 CONFIG_NO_GFX_INIT=y
+CONFIG_EC_GOOGLE_CHROMEEC_AUTO_FAN_CTRL=y
+CONFIG_EC_GOOGLE_CHROMEEC_AFTER_G3_STATE=y
+CONFIG_EC_GOOGLE_CHROMEEC_RTC=y
+CONFIG_MINIPC_HIDE_AC=y
+CONFIG_MINIPC_HIDE_BATTERY=y
+CONFIG_MINIPC_HIDE_VBTN=y
+CONFIG_MINIPC_HIDE_R8168_ACPI=y
+CONFIG_SOC_INTEL_HIDE_EMMC=y
+CONFIG_EDK2_NETWORK_PXE_SUPPORT=y
 CONFIG_EDK2_ENABLE_IPXE=y
-
+CONFIG_EDK2_RTKUNDI_DRIVER=y
+CONFIG_EDK2_REPOSITORY="https://github.com/jackadam1981/mrchromebox_edk2.git"
+CONFIG_EDK2_TAG_OR_REV="origin/pr/rtl8168-pxe"
+CONFIG_BOARD_ROMSIZE_KB_16384=y
+CONFIG_COREBOOT_ROMSIZE_KB_16384=y
+# CONFIG_CHROMEOS is not set
+CONFIG_FMDFILE="src/mainboard/$(CONFIG_MAINBOARD_DIR)/uefi-16MiB.fmd"
+# CONFIG_DRIVERS_INTEL_DPTF is not set
 CONFIG_PUFF_SLEEP_MODE_S3=y
 # CONFIG_PUFF_SLEEP_MODE_NONE is not set
+# CONFIG_PUFF_SLEEP_MODE_S0IX is not set

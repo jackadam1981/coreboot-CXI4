@@ -143,9 +143,14 @@ void set_power_limits(u8 power_limit_1_time,
 				tdp_pl1 / power_unit, min_power / power_unit);
 		tdp_pl1 = min_power;
 	} else if (max_power > 0 && tdp_pl1 > max_power) {
-		printk(BIOS_ERR, "PL1 %uW exceeds hardware maximum %uW, clamping\n",
+		if (tdp_pl1_override) {
+			printk(BIOS_INFO, "PL1 override %uW (SKU max %uW, cTDP-up)\n",
 				tdp_pl1 / power_unit, max_power / power_unit);
-		tdp_pl1 = max_power;
+		} else {
+			printk(BIOS_ERR, "PL1 %uW exceeds hardware maximum %uW, clamping\n",
+				tdp_pl1 / power_unit, max_power / power_unit);
+			tdp_pl1 = max_power;
+		}
 	}
 
 	printk(BIOS_INFO, "CPU PL1 = %u Watts\n", tdp_pl1 / power_unit);
